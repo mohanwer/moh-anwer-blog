@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/bundle-analyzer": "^13.4.4",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "20.2.5",
@@ -18,6 +19,7 @@
     "eslint-config-next": "13.4.4",
     "next": "13.4.4",
     "postcss": "8.4.24",
+    "preact": "^10.15.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tailwindcss": "3.3.2"
@@ -25,6 +27,7 @@
   "devDependencies": {
     "eslint": "^8.42.0",
     "prettier": "^2.8.8",
+    "prettier-plugin-tailwindcss": "^0.3.0",
     "typescript": "^5.1.3"
   }
 }
