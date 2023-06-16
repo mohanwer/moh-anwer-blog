@@ -5,6 +5,7 @@ module.exports = {
     amd: true,
     node: true,
     es6: true,
+    jest: true,
   },
   extends: ['eslint:recommended', 'plugin:prettier/recommended', 'next', 'next/core-web-vitals'],
   rules: {
