@@ -1,10 +1,11 @@
 import path from 'path'
-import * as fs from 'fs'
+import fs from 'fs'
 import matter from 'gray-matter'
-import { Slug } from './types'
+import { BlogWithPaginationInfo, PostFrontMatter } from './types'
+import { BLOG_PATH } from '@/constants'
+import readingTime from 'reading-time'
 
 const BLOG_FILE_TYPES = new Set(['.md', '.mdx'])
-const root = process.cwd()
 
 export function getAllFilesRecursively(folder: string): string[] {
   const dirs = fs.readdirSync(folder, { withFileTypes: true })
@@ -13,7 +14,8 @@ export function getAllFilesRecursively(folder: string): string[] {
     if (dir.isDirectory()) {
       filesMatchingExtension.push(...getAllFilesRecursively(path.join(folder, dir.name)))
     } else {
-      const fileExtension = path.extname(dir.name)
+      const fileName = dir.name.replace(/\\/g, '/')
+      const fileExtension = path.extname(fileName)
       if (BLOG_FILE_TYPES.has(fileExtension)) {
         const filePath = path.join(folder, dir.name)
         filesMatchingExtension.push(filePath)
@@ -23,27 +25,56 @@ export function getAllFilesRecursively(folder: string): string[] {
   return filesMatchingExtension
 }
 
-export function getAllFilesFrontMatter(folder: string): Slug[] {
-  const blogDir = path.join(root, 'data')
-  const files = getAllFilesRecursively(blogDir)
-  const activeFrontMatter: Slug[] = []
-  files.forEach((file) => {
-    const source = fs.readFileSync(file, 'utf-8')
-    const { data: frontMatter } = matter(source)
-    if (!frontMatter.draft) {
-      activeFrontMatter.push({
-        title: frontMatter.title,
-        summary: frontMatter.summary,
-        draft: frontMatter.draft,
-        slug: file.replace(/\.(mdx|md)/, ''),
-        date: new Date(frontMatter.date),
-      })
+export function mapFrontMatter<TFrontMatter>(filePath: string): TFrontMatter {
+  const source = fs.readFileSync(filePath, 'utf-8')
+  const { data: frontMatter } = matter(source)
+  // @ts-ignore
+  return {
+    readingTime: readingTime(source),
+    filePath,
+    fileName: filePath.replace(/^.*[\\\/]/, ''),
+    slug: filePath.replace(/\.(mdx|md)/, ''),
+    date: frontMatter.date.toString(),
+    ...frontMatter,
+  }
+}
+
+export function getAllFilesFrontMatter<TFrontMatter>(folder: string): TFrontMatter[] {
+  const files = getAllFilesRecursively(folder)
+  return files.map(mapFrontMatter<TFrontMatter>)
+  // return filesFrontMatter.sort((a, b) => {
+  //   if (a.da == b) return 0
+  //   if (a > b) return -1
+  //   return 1
+  // })
+}
+
+export function getBlogWithPrevAndNext(blogUrl: string): BlogWithPaginationInfo {
+  const files = getAllFilesRecursively(BLOG_PATH)
+  let prevBlog: PostFrontMatter | null = null
+  let nextBlog: PostFrontMatter | null = null
+  let blog: PostFrontMatter
+  let blogIndex: number = -1
+  files.forEach((file, idx) => {
+    prevBlog = blog
+    blog = mapFrontMatter<PostFrontMatter>(file)
+    const { url } = blog
+    if (url === blogUrl) {
+      blogIndex = idx
+      return
     }
   })
-
-  return activeFrontMatter.sort((a, b) => {
-    if (a == b) return 0
-    if (a > b) return -1
-    return 1
-  })
+  if (blogIndex === -1) {
+    throw Error(`${blogUrl} could not be found`)
+  }
+  if (blogIndex < files.length) {
+    nextBlog = mapFrontMatter(files[blogIndex + 1])
+  }
+  blog = mapFrontMatter(files[blogIndex])
+  return {
+    idx: blogIndex,
+    nextBlog,
+    blog,
+    prevBlog,
+  }
 }

@@ -1,9 +1,10 @@
-import { CommonSEO } from '@/components/seo/CommonSEO'
+import { CommonSEO } from './CommonSEO'
 import { siteMetadata } from '@/data/siteMetaData'
 
 interface PageSEOProps {
   title: string
   description: string
+  path: string
 }
 
 export const PageSEO = (props: PageSEOProps) => {
