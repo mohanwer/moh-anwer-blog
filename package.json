@@ -43,6 +43,7 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
+    "@svgr/webpack": "^8.0.1",
     "@types/jest": "^29.5.2",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.8.0",

@@ -32,8 +32,8 @@ export function mapFrontMatter<TFrontMatter>(filePath: string): TFrontMatter {
   return {
     readingTime: readingTime(source),
     filePath,
-    fileName: filePath.replace(/^.*[\\\/]/, ''),
-    slug: filePath.replace(/\.(mdx|md)/, ''),
+    fileName: filePath.replace(/^.*[\\]/, ''),
+    slug: filePath.replace(/.(mdx|md)/, ''),
     date: frontMatter.date.toString(),
     ...frontMatter,
   }
@@ -42,11 +42,6 @@ export function mapFrontMatter<TFrontMatter>(filePath: string): TFrontMatter {
 export function getAllFilesFrontMatter<TFrontMatter>(folder: string): TFrontMatter[] {
   const files = getAllFilesRecursively(folder)
   return files.map(mapFrontMatter<TFrontMatter>)
-  // return filesFrontMatter.sort((a, b) => {
-  //   if (a.da == b) return 0
-  //   if (a > b) return -1
-  //   return 1
-  // })
 }
 
 export function getBlogWithPrevAndNext(blogUrl: string): BlogWithPaginationInfo {
