@@ -55,22 +55,24 @@ export function getBlogWithPrevAndNext(blogUrl: string): BlogWithPaginationInfo 
   let nextBlog: PostFrontMatter | null = null
   let blog: PostFrontMatter
   let blogIndex: number = -1
+  let filePath = ''
   files.forEach((file, idx) => {
     prevBlog = blog
     blog = mapFrontMatter<PostFrontMatter>(file)
     const { url } = blog
     if (url === blogUrl) {
       blogIndex = idx
+      filePath = file
       return
     }
   })
-  if (blogIndex === -1) {
+  if (blogIndex === -1 || filePath === '') {
     throw Error(`${blogUrl} could not be found`)
   }
-  if (blogIndex < files.length) {
+  if (blogIndex < files.length - 1) {
     nextBlog = mapFrontMatter(files[blogIndex + 1])
   }
-  blog = mapFrontMatter(files[blogIndex])
+  blog = mapFrontMatter(filePath)
   return {
     idx: blogIndex,
     nextBlog,

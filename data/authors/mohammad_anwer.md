@@ -9,4 +9,7 @@ github: https://github.com/mohanwer
 date: 2016-03-08
 ---
 
-Mohammad Anwar is a Lead Software Engineer @ Alt.xyz
+I'm Mohammad Anwer. I currently live in Washington DC metro area with my wife and two cats. 
+
+I'm currently one of the Lead Software Engineers developing [Alt.xyz](https://www.alt.xyz/). I'm full stack with
+a focus towards python, aws, and React.js.
