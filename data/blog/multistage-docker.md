@@ -5,18 +5,15 @@ date: 2023-07-23
 tags: ['docker', 'python', 'fastapi']
 #authors: ['Mohammad Anwer']
 draft: false
-summary: Guide for creating a multi-stage docker image for a FastApi
+summary: A guide for creating a docker image for a FastApi
 ---
 
-## Optimizing docker with multi-stage building
+### A guide for creating a docker image for a FastApi
 Docker is used in modern web applications to build our apps in a virtualized environment. This article describes how to 
-build and test a python [FastApi](https://fastapi.tiangolo.com/) application efficiently. When building applications, 
-we often have slight differences based on environments our application may run in. For example, the testing environment
-in this project has extra dependencies and files. There are common dependencies, such as python, that are needed both
-in production and test environments and we can utilize multi-stage builds to optimize our docker builds.
+build and test a python [FastApi](https://fastapi.tiangolo.com/) applications using docker. 
 
 ### Github Link
-A complete example of a project exist on [Github](https://github.com/mohanwer/fastapi-redis-example).
+A complete example of a project exists on [Github](https://github.com/mohanwer/fastapi-redis-example).
 
 ### Dockerfile
 The dockerfile contains all the instructions to construct a virtual image containing our web application. The 
@@ -43,8 +40,14 @@ CMD uvicorn server.main:app --reload
 ```
 
 ### Instructions
-Each line in the example dockerfile begins with a docker instructions. Each of these instructions are cached as layers. 
+Each line in the example dockerfile begins with a docker instruction. Each of these instructions are cached as layers. 
 When docker builds, it will check the cache to see if it needs to rebuild the line. 
+
+### Multi-stage builds
+When building applications, we often have slight differences based on environments our application may run in. 
+For example, the testing environment in this project has extra dependencies and files. There are common dependencies, 
+such as python, that are needed both in production and test environments. We can utilize multi-stage builds to 
+optimize our docker builds so that it is not rebuilding common dependencies for each environment.
 
 ### 1st stage (base)
 The first instruction found in our dockerfile is `FROM python:3.11 as base`. The purpose of this is to pull a pre-made
