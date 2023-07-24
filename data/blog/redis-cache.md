@@ -1,7 +1,7 @@
 ---
 title: Redis caching python
 url: 'redis-python'
-date: 2016-03-08
+date: 2023-07-21
 tags: ['redis', 'python']
 #authors: ['Mohammad Anwer']
 draft: false
@@ -15,21 +15,20 @@ import TOCInline from "@/TOCInline";
 
 When building web applications it's common to introduce cacheing to speed up our api responses 
 in order to scale. This can become necessary when an api is called frequently and the persistent data layer
-is a bottleneck or the particular api has a long running computation to perform.
+is a bottleneck or the particular api has a long-running computation to perform.
 
-There are many options for cacheing. In this article we'll discuss application layer cacheing and use 
+There are many options for cacheing. In this article we'll discuss application layer cacheing and using 
 redis. 
 
 ## Setting up a redis connection
 
-In order to setup redis in our application, we'll need setup a redis connection that can be imported when needed. Utilize
+In order to setup redis in our application, we'll need configure a redis connection that can be imported when needed. Utilize
 `start_redis_connection_pool` to have a persistent connection pool while the web application is running.
 
 ```python 
 # redis_connection.py
 
 from typing import Optional
-
 from redis import asyncio
 
 # thread safe global connection pool
