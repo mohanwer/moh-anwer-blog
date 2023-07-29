@@ -7,6 +7,9 @@ tags: ['docker', 'python', 'fastapi']
 draft: false
 summary: A guide for creating a docker image for a FastApi
 ---
+import TOCInline from "@/TOCInline";
+
+<TOCInline toc={props.toc} exclude="Overview" toHeading={2} />
 
 ### A guide for creating a docker image for a FastApi
 Docker is used in modern web applications to build our apps in a virtualized environment. This article describes how to 
