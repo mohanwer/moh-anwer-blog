@@ -7,13 +7,13 @@ import remarkMath from 'remark-math'
 import remarkExtractFrontmatter from './remark-extract-frontmatter'
 import remarkCodeTitles from './remark-code-title'
 import remarkTocHeadings from './remark-toc-headings'
-import remarkImgToJsx from './remark-img-to-jsx'
 import rehypeSlug from 'rehype-slug'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeKatex from 'rehype-katex'
 import rehypePrismPlus from 'rehype-prism-plus'
 import { BundledMdx, Toc } from '@/types'
 import { mapFrontMatter } from '@/fileUtils'
+import remarkMdxImages from 'remark-mdx-images'
 
 const root = process.cwd()
 
@@ -30,7 +30,7 @@ export async function getSlugAsBundledMdx<TFrontMatter>(
 
   let toc: Toc[] = []
 
-  const { code, frontmatter } = await bundleMDX({
+  const { code } = await bundleMDX({
     source,
     // mdx imports can be automatically source from the components directory
     cwd: path.join(root, 'components'),
@@ -46,16 +46,14 @@ export async function getSlugAsBundledMdx<TFrontMatter>(
         remarkCodeTitles,
         [remarkFootnotes, { inlineNotes: true }],
         remarkMath,
-        remarkImgToJsx,
+        remarkMdxImages,
       ]
       options.rehypePlugins = [
         ...(options.rehypePlugins ?? []),
         rehypeSlug,
         rehypeAutolinkHeadings,
         rehypeKatex,
-        // [rehypeCitation, { path: path.join(root, 'data', folder) }],
         [rehypePrismPlus, { ignoreMissing: true }],
-        // rehypePresetMinify,
       ]
       return options
     },
@@ -63,6 +61,7 @@ export async function getSlugAsBundledMdx<TFrontMatter>(
       options.loader = {
         ...options.loader,
         '.js': 'jsx',
+        '.png': 'dataurl',
       }
       return options
     },

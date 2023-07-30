@@ -1,0 +1,64 @@
+---
+title: Scaling web apps using read replicas
+url: 'read-replica'
+date: 2023-07-30
+tags: ['posptgres', 'fastapi', 'aws', 'react.js']
+#authors: ['Mohammad Anwer']
+draft: false
+summary: How we scaled our GraphQL server with read replicas
+---
+
+
+
+
+
+
+
+import TOCInline from "@/TOCInline";
+
+<TOCInline toc={props.toc} exclude="Overview" toHeading={2} />
+
+## How we scaled Alt.xyz to handle growing read requests
+
+At [Alt.xyz](https://app.alt.xyz/browse) we built a marketplace for selling investment 
+grade cards. Over time, our application grew from a scale of tens of thousands to millions of daily requests.
+
+We started a single postgres instance that all our clients were reading / writing to / from. Below is a diagram of
+our system at the time. One can see there exists contention with the single database instance serving all traffic.
+![postgres-diagram](/static/images/postgres-system-diagram.png)
+
+In order to handle the scale, we switched from postgres to aurora
+database instances and horizontally scaled using read replicas. 99% of the daily requests were read requests.
+We opted to send all our read data to the read replicas and only writes to the primary database instance.
+This post describes how we implemented such a change in a GraphQL environment. Below is a diagram of the final system
+to give an idea of what we're working towards in this post.
+![aurora-diagram](/static/images/aurora-system-diagram.png)
+
+## Postgres read replicas
+We started with postgres as our database. Postgres offers read replicas and adding a read instance is relatively 
+straight forward in the AWS console (shown below). In a production environment, I recommend to manage these resources
+through terraform but for the purpose of this post working directly through the aws rds console is sufficient:
+
+![aws](/static/images/postgres-read-replica.png)
+
+Prior to implementing read replica usage developer's should understand how long data takes to be written to the read
+replica. In our case, it would take several seconds for the read replica. This information is available in the monitoring
+section of a read replica.
+
+![aws-monitoring](/static/images/postgres-replication-lag.png)
+
+The monitor `ReplicaLag` is the one we need to gain insights:
+![aws-replication-monitor](/static/images/postgres-replication-monitor.png)
+
+Once insight to replication lag is gained, developers will need to understand whether the product they are building
+has tolerance for showing stale data and for how long. There are times the replication lag can spike if the rds instance
+is experiencing high cpu usage. This can occur due to long-running queries or database migrations on large tables.
+
+## Migration to Aurora
+Coming soon
+
+## Server: biforking read/write
+Coming soon
+
+## Frontend: biforking read/write
+Coming soon
