@@ -1,7 +1,7 @@
 ## Moh Anwer's Blog
 This is a nextjs project that servers markdown files added to blog/data. When creating mark down files, ensure to add a tags attribute as shown below. These tags will be used for SEO optimizations:
 
-https://github.com/mohanwer/moh-anwer-blog/blob/710559075de3a93ce8efa60c7d0f8a288905d85a/data/blog/read-replica.mdx?plain=1#L5
+https://github.com/mohanwer/moh-anwer-blog/blob/c2dc6340a6d5cea104fec4cceca2a11f09fbaf35/data/blog/redis-cache.md?plain=1#L5
 
 ## Getting Started
 
